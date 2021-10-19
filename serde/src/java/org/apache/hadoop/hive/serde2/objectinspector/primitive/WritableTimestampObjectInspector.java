@@ -21,6 +21,7 @@ import java.sql.Timestamp;
 
 import org.apache.hadoop.hive.serde2.io.TimestampWritable;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfoFactory;
+import org.apache.hadoop.io.LongWritable;
 
 public class WritableTimestampObjectInspector extends
     AbstractPrimitiveWritableObjectInspector implements
@@ -36,6 +37,9 @@ public class WritableTimestampObjectInspector extends
   }
 
   public Timestamp getPrimitiveJavaObject(Object o) {
+    if (o instanceof LongWritable) {
+      return new Timestamp(((LongWritable) o).get());
+    }
     return o == null ? null : ((TimestampWritable) o).getTimestamp();
   }
 
