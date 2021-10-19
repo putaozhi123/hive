@@ -33,6 +33,10 @@ public class WritableTimestampObjectInspector extends
 
   @Override
   public TimestampWritable getPrimitiveWritableObject(Object o) {
+    if (o instanceof LongWritable) {
+      return (TimestampWritable) PrimitiveObjectInspectorFactory.writableTimestampObjectInspector
+          .create(new Timestamp(((LongWritable) o).get()));
+    }
     return o == null ? null : (TimestampWritable) o;
   }
 
@@ -44,11 +48,19 @@ public class WritableTimestampObjectInspector extends
   }
 
   public Object copyObject(Object o) {
+    if (o instanceof LongWritable) {
+      return new TimestampWritable(new Timestamp(((LongWritable) o).get()));
+    }
     return o == null ? null : new TimestampWritable((TimestampWritable) o);
   }
 
   public Object set(Object o, byte[] bytes, int offset) {
-    ((TimestampWritable) o).set(bytes, offset);
+    if (o instanceof LongWritable) {
+      o = PrimitiveObjectInspectorFactory.writableTimestampObjectInspector
+          .create(new Timestamp(((LongWritable) o).get()));
+    } else {
+      ((TimestampWritable) o).set(bytes, offset);
+    }
     return o;
   }
 
@@ -56,7 +68,12 @@ public class WritableTimestampObjectInspector extends
     if (t == null) {
       return null;
     }
-    ((TimestampWritable) o).set(t);
+
+    if (o instanceof LongWritable) {
+      o = PrimitiveObjectInspectorFactory.writableTimestampObjectInspector.create(t);
+    } else {
+      ((TimestampWritable) o).set(t);
+    }
     return o;
   }
 
@@ -64,7 +81,13 @@ public class WritableTimestampObjectInspector extends
     if (t == null) {
       return null;
     }
-    ((TimestampWritable) o).set(t);
+
+    if (o instanceof LongWritable) {
+      o = PrimitiveObjectInspectorFactory.writableTimestampObjectInspector
+          .create(new Timestamp(((LongWritable) o).get()));
+    } else {
+      ((TimestampWritable) o).set(t);
+    }
     return o;
   }
 
